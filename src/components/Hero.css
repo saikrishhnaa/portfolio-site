@@ -1,0 +1,107 @@
+.hero-section {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.hero-card {
+  background-color: var(--card-bg);
+  border-radius: 32px;
+  border: 1px solid var(--border-color);
+  padding: 3rem;
+  display: flex;
+  justify-content: space-between;
+  gap: 2rem;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.05); /* very soft shadow to anchor it */
+}
+
+.hero-content {
+  flex: 1;
+  max-width: 700px;
+}
+
+.hero-subtitle {
+  font-size: 0.875rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.hero-title {
+  font-size: 2.5rem;
+  font-weight: 600;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  letter-spacing: -0.02em;
+}
+
+.hero-description {
+  font-size: 1rem;
+  color: #555;
+  line-height: 1.6;
+  margin-bottom: 2rem;
+  max-width: 600px;
+}
+
+.hero-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.tag {
+  padding: 0.35rem 0.75rem;
+  border-radius: var(--radius-full);
+  border: 1px solid var(--border-color);
+  font-size: 0.875rem;
+  font-weight: 600;
+}
+
+.tag.yellow { background-color: var(--tag-yellow); }
+.tag.purple { background-color: var(--tag-purple); }
+.tag.green { background-color: var(--tag-green); }
+.tag.pink { background-color: var(--tag-pink); }
+.tag.blue { background-color: var(--tag-blue); }
+
+/* Pseudo element for border on clip-path elements is tricky, we use a wrapper approach if needed, or just a solid color with no border */
+
+.hero-avatar-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+.avatar-wrapper {
+  background-color: var(--card-bg); /* Use card inner background */
+  border-radius: 24px;
+  border: 1px solid var(--border-color);
+  width: 200px;
+  height: 200px;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.avatar-caption {
+  font-size: 0.875rem;
+  font-weight: 600;
+  text-align: center;
+  max-width: 200px;
+}
+
+@media (max-width: 768px) {
+  .hero-card {
+    flex-direction: column;
+    padding: 2rem;
+  }
+}

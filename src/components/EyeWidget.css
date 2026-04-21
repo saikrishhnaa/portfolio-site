@@ -1,0 +1,160 @@
+.eye-widget-container {
+  position: fixed;
+  bottom: 2rem;
+  left: 2rem;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  pointer-events: none;
+}
+
+.eye-bubble-container {
+  pointer-events: auto;
+  background-color: var(--yellow);
+  border: 3px solid var(--text);
+  border-radius: 8px;
+  padding: 0.8rem 1rem;
+  box-shadow: 4px 4px 0px var(--text);
+  margin-bottom: 20px;
+  position: relative;
+  font-family: 'Inter', sans-serif;
+  max-width: 250px;
+  animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+  transform-origin: bottom left;
+}
+
+@keyframes popIn {
+  0% { transform: scale(0); opacity: 0; }
+  100% { transform: scale(1); opacity: 1; }
+}
+
+.eye-bubble-container::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 20px;
+  width: 0;
+  height: 0;
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent;
+  border-top: 15px solid var(--text);
+}
+
+.eye-bubble-container::before {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 23px;
+  width: 0;
+  height: 0;
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 10px solid var(--yellow);
+  z-index: 1;
+}
+
+.eye-bubble-text {
+  font-size: 0.875rem;
+  font-weight: 800;
+  margin-bottom: 0.8rem;
+  color: var(--text);
+}
+
+.eye-bookmark-actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.eye-btn {
+  padding: 0.4rem 0.8rem;
+  border: 2px solid var(--text);
+  font-weight: 800;
+  font-size: 0.75rem;
+  cursor: pointer;
+  transition: transform 0.1s;
+}
+
+.eye-btn:hover {
+  transform: translateY(-2px);
+}
+
+.eye-btn.yes {
+  background-color: var(--text);
+  color: var(--yellow);
+}
+
+.eye-btn.no {
+  background-color: white;
+  color: var(--text);
+}
+
+/* The physical CSS Eye */
+.css-eye {
+  pointer-events: auto;
+  width: 80px;
+  height: 80px;
+  background-color: #E2E8F0;
+  border: 5px solid var(--text);
+  border-radius: 50%;
+  position: relative;
+  box-shadow: 6px 6px 0px var(--text);
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes irritatedShake {
+  0% { transform: translate(1px, 1px) rotate(0deg); }
+  10% { transform: translate(-1px, -2px) rotate(-1deg); }
+  20% { transform: translate(-3px, 0px) rotate(1deg); }
+  30% { transform: translate(3px, 2px) rotate(0deg); }
+  40% { transform: translate(1px, -1px) rotate(1deg); }
+  50% { transform: translate(-1px, 2px) rotate(-1deg); }
+  60% { transform: translate(-3px, 1px) rotate(0deg); }
+  70% { transform: translate(3px, 1px) rotate(-1deg); }
+  80% { transform: translate(-1px, -1px) rotate(1deg); }
+  90% { transform: translate(1px, 2px) rotate(0deg); }
+  100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
+
+.css-eye.irritated {
+  animation: irritatedShake 0.4s infinite;
+}
+
+.css-eye-lid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 25%;
+  background-color: #f1f5f9;
+  z-index: 10;
+  border-bottom: 4px solid var(--text);
+  transition: height 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.css-eye.irritated .css-eye-lid {
+  height: 48%; /* Lowers the eyelid to look annoyed */
+}
+
+.css-iris {
+  width: 40px;
+  height: 40px;
+  background-color: #CBD5E1;
+  border: 4px solid var(--text);
+  border-radius: 50%;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition: transform 0.05s linear;
+}
+
+.css-pupil {
+  width: 12px;
+  height: 12px;
+  background-color: var(--text);
+  border-radius: 50%;
+}

@@ -1,0 +1,221 @@
+.projects-section {
+  padding: 0 2rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.projects-container {
+  background-color: var(--card-bg);
+  border-radius: 32px;
+  border: 1px solid var(--border-color);
+  padding: 3rem;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+}
+
+.projects-header {
+  margin-bottom: 2.5rem;
+}
+
+.projects-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.projects-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 2rem;
+}
+
+.project-feature-card {
+  background-color: #fff;
+  border: 1px solid var(--border-color);
+  border-radius: 24px;
+  box-shadow: 4px 4px 0px var(--border-color);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-feature-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 6px 6px 0px var(--border-color);
+}
+
+.project-image-wrapper {
+  position: relative;
+  width: 100%;
+  padding-bottom: 65%; /* Forces vertical space to be dominant (> 60%) */
+  border-bottom: 1px solid var(--border-color);
+  overflow: hidden;
+  background-color: var(--card-bg);
+}
+
+.project-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top;
+  transition: transform 0.3s ease;
+}
+
+.project-feature-card:hover .project-image {
+  transform: scale(1.05);
+}
+
+.project-content {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.project-title-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: 0.75rem;
+  gap: 1rem;
+}
+
+.project-title-text {
+  font-size: 1.25rem;
+  font-weight: 800;
+  margin: 0;
+}
+
+.project-summary-wrapper {
+  position: relative;
+  cursor: default;
+  flex-grow: 1;
+}
+
+.project-summary {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.6;
+  margin: 0;
+  
+  /* 3-line clipping */
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.project-tooltip {
+  position: absolute;
+  bottom: calc(100% + 10px);
+  left: 0;
+  z-index: 200;
+  background-color: var(--text);
+  color: #fff;
+  font-size: 0.85rem;
+  font-weight: 500;
+  line-height: 1.55;
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  max-width: 300px;
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
+  pointer-events: none;
+  animation: fadeUp 0.15s ease;
+}
+
+.project-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 18px;
+  border: 7px solid transparent;
+  border-top-color: var(--text);
+}
+
+.project-footer-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.project-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.project-tag {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.2rem 0.55rem;
+  border: 1.5px solid rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+  background: white;
+  color: rgba(0, 0, 0, 0.6);
+  letter-spacing: 0.02em;
+}
+
+.project-links {
+  display: flex;
+  gap: 0.6rem;
+  align-items: center;
+}
+
+.project-icon-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px; /* Matching exact size */
+  height: 28px;
+  border-radius: 50%;
+  color: var(--text);
+  text-decoration: none;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.project-icon-btn.outline {
+  background-color: white;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+.project-icon-btn.outline:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px var(--border-color);
+  /* Intentionally keeping white background as per preference */
+}
+
+.project-icon-btn.primary {
+  background-color: white;
+  border: 1.5px solid var(--border-color);
+  box-shadow: 2px 2px 0px var(--border-color);
+}
+
+.project-icon-btn.primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 3px 3px 0px var(--border-color);
+  background-color: var(--tag-green); /* Differentiate the live demo slightly on hover */
+}
+
+@media (max-width: 768px) {
+  .projects-container {
+    padding: 2rem 1.5rem;
+  }
+}

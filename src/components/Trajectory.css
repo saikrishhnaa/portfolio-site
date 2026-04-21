@@ -1,0 +1,139 @@
+.trajectory-section {
+  padding: 0 2rem 2rem 2rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.trajectory-container {
+  background-color: var(--card-bg);
+  border-radius: 32px;
+  border: 1px solid var(--border-color);
+  padding: 3rem;
+  box-shadow: 4px 4px 0px rgba(0,0,0,0.05);
+  display: flex;
+  flex-direction: column;
+}
+
+.trajectory-header {
+  margin-bottom: 1rem;
+}
+
+.trajectory-subtitle {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  margin-bottom: 1rem;
+}
+
+.trajectory-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1.3;
+}
+
+.trajectory-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.trajectory-item {
+  display: flex;
+  gap: 1.5rem;
+  padding: 2rem;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 3px 3px 0px var(--border-color);
+  background-color: #fff;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.trajectory-item:hover {
+  transform: translateY(-2px);
+  box-shadow: 5px 5px 0px var(--border-color);
+}
+
+/* Specific background colors for items based on index */
+.trajectory-item:nth-child(1) { background-color: #F3E8FF; } /* Pale Purple */
+.trajectory-item:nth-child(2) { background-color: #FAE8FF; } /* Pale Pink */
+.trajectory-item:nth-child(3) { background-color: #DBEAFE; } /* Pale Blue */
+.trajectory-item:nth-child(4) { background-color: #F1F5F9; } /* Pale Gray */
+
+.item-logo {
+  width: 80px;
+  height: 80px;
+  flex-shrink: 0;
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: var(--text);
+  box-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+  background-color: #fff;
+  overflow: hidden;
+}
+
+.trajectory-company-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 0.5rem;
+}
+
+.item-content {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.item-year {
+  font-size: 0.875rem;
+  color: #666;
+  margin-bottom: 0.25rem;
+  font-weight: 600;
+}
+
+.item-role {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+}
+
+.item-bullets {
+  list-style-type: disc;
+  padding-left: 1.25rem;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+}
+
+.item-bullets li {
+  font-size: 0.95rem;
+  color: #444;
+  line-height: 1.5;
+}
+
+@media (max-width: 768px) {
+  .trajectory-container {
+    padding: 2rem 1.5rem;
+  }
+  
+  .trajectory-item {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1.5rem;
+  }
+  
+  .item-logo {
+    width: 60px;
+    height: 60px;
+    font-size: 1.25rem;
+  }
+}
