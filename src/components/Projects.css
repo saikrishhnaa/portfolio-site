@@ -105,46 +105,48 @@
   flex-grow: 1;
 }
 
+.project-summary-wrapper:not(.expanded) {
+  max-height: 4.56rem; /* exactly 3 lines at font-size 0.95rem and line-height 1.6 */
+  overflow: hidden;
+}
+
 .project-summary {
   font-size: 0.95rem;
   color: #444;
   line-height: 1.6;
   margin: 0;
-  
-  /* 3-line clipping */
-  display: -webkit-box;
-  -webkit-line-clamp: 3;
-  -webkit-box-orient: vertical;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
-.project-tooltip {
-  position: absolute;
-  bottom: calc(100% + 10px);
-  left: 0;
-  z-index: 200;
-  background-color: var(--text);
-  color: #fff;
-  font-size: 0.85rem;
+.read-more-btn {
+  background: none;
+  border: none;
+  color: var(--tag-purple);
   font-weight: 500;
-  line-height: 1.55;
-  padding: 0.75rem 1rem;
-  border-radius: 12px;
-  max-width: 300px;
-  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.2);
-  pointer-events: none;
-  animation: fadeUp 0.15s ease;
+  font-size: 0.95rem;
+  padding: 0;
+  cursor: pointer;
+  display: inline;
+  line-height: 1.6;
 }
 
-.project-tooltip::after {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 18px;
-  border: 7px solid transparent;
-  border-top-color: var(--text);
+.read-more-btn:hover {
+  text-decoration: underline;
 }
+
+.project-summary-wrapper .overlay-btn {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  background-color: #fff !important;
+  padding-left: 0.5rem;
+  line-height: 1.6;
+}
+
+.inline-btn {
+  margin-left: 0.25rem;
+}
+
+
 
 .project-footer-row {
   display: flex;
@@ -199,7 +201,6 @@
 .project-icon-btn.outline:hover {
   transform: translateY(-2px);
   box-shadow: 3px 3px 0px var(--border-color);
-  /* Intentionally keeping white background as per preference */
 }
 
 .project-icon-btn.primary {
@@ -211,7 +212,6 @@
 .project-icon-btn.primary:hover {
   transform: translateY(-2px);
   box-shadow: 3px 3px 0px var(--border-color);
-  background-color: var(--tag-green); /* Differentiate the live demo slightly on hover */
 }
 
 @media (max-width: 768px) {

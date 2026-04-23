@@ -5,6 +5,43 @@ import { FaGithub, FaLinkedinIn } from 'react-icons/fa';
 import './Header.css';
 import { client } from '../sanityClient';
 
+let globalAudioCtx = null;
+
+export const triggerClickSound = () => {
+  try {
+    if (!globalAudioCtx) {
+      const AudioContext = window.AudioContext || window.webkitAudioContext;
+      globalAudioCtx = new AudioContext();
+    }
+    if (globalAudioCtx.state === 'suspended') {
+      globalAudioCtx.resume();
+    }
+    
+    const playClick = (freqStart, freqEnd, timeOffset, duration, volume) => {
+      const osc = globalAudioCtx.createOscillator();
+      const gain = globalAudioCtx.createGain();
+      
+      osc.type = 'square';
+      osc.frequency.setValueAtTime(freqStart, globalAudioCtx.currentTime + timeOffset);
+      osc.frequency.exponentialRampToValueAtTime(freqEnd, globalAudioCtx.currentTime + timeOffset + duration);
+      
+      gain.gain.setValueAtTime(volume, globalAudioCtx.currentTime + timeOffset);
+      gain.gain.exponentialRampToValueAtTime(0.001, globalAudioCtx.currentTime + timeOffset + duration);
+      
+      osc.connect(gain);
+      gain.connect(globalAudioCtx.destination);
+      
+      osc.start(globalAudioCtx.currentTime + timeOffset);
+      osc.stop(globalAudioCtx.currentTime + timeOffset + duration);
+    };
+
+    playClick(4500, 150, 0, 0.012, 0.08);
+    playClick(3500, 100, 0.05, 0.012, 0.06);
+  } catch (err) {
+    console.log('Audio feedback skipped');
+  }
+};
+
 const sarcasticMessages = [
   "PRODUCTIVITY DROPPING...",
   "SHOULDN'T YOU BE WORKING?",
@@ -25,11 +62,12 @@ const Header = ({ activePage = 'about', setActivePage, openContact }) => {
   const [siteConfig, setSiteConfig] = useState({
     githubUrl: 'https://github.com/saikrishhnaa',
     linkedinUrl: 'https://www.linkedin.com/in/saikrishna-makam-4260351b3/',
+    resumeUrl: null,
   });
 
   useEffect(() => {
-    client.fetch('*[_type == "siteConfig"][0]').then(data => {
-      if (data) setSiteConfig(data);
+    client.fetch('*[_type == "siteConfig"][0]{..., "resumeUrl": resume.asset->url}').then(data => {
+      if (data) setSiteConfig(prev => ({ ...prev, ...data }));
     });
   }, []);
 
@@ -63,52 +101,30 @@ const Header = ({ activePage = 'about', setActivePage, openContact }) => {
     return `${m}:${s}`;
   };
 
+  const soundOnRef = React.useRef(soundOn);
   useEffect(() => {
-    if (!soundOn) return;
+    soundOnRef.current = soundOn;
+  }, [soundOn]);
 
-    const playClickSound = (e) => {
+  useEffect(() => {
+    const handleGlobalClick = (e) => {
+      // Allow sound button itself to trigger audio even when currently off
+      const isSoundToggle = e.target.closest('.sound-icon-btn');
+      if (!soundOnRef.current && !isSoundToggle) return;
+
       const isClickable = 
         e.target.closest('button, a, input, select, textarea, label, [role="button"]') ||
         window.getComputedStyle(e.target).cursor === 'pointer';
 
       if (isClickable) {
-        try {
-          const AudioContext = window.AudioContext || window.webkitAudioContext;
-          const ctx = new AudioContext();
-          
-          const snapOsc = ctx.createOscillator();
-          const snapGain = ctx.createGain();
-          snapOsc.type = 'square';
-          snapOsc.frequency.setValueAtTime(3000, ctx.currentTime);
-          snapOsc.frequency.exponentialRampToValueAtTime(100, ctx.currentTime + 0.015);
-          snapGain.gain.setValueAtTime(0.15, ctx.currentTime);
-          snapGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.015);
-          snapOsc.connect(snapGain);
-          snapGain.connect(ctx.destination);
-          snapOsc.start(ctx.currentTime);
-          snapOsc.stop(ctx.currentTime + 0.015);
-
-          const thudOsc = ctx.createOscillator();
-          const thudGain = ctx.createGain();
-          thudOsc.type = 'sine';
-          thudOsc.frequency.setValueAtTime(300, ctx.currentTime);
-          thudOsc.frequency.exponentialRampToValueAtTime(40, ctx.currentTime + 0.04);
-          thudGain.gain.setValueAtTime(0.4, ctx.currentTime);
-          thudGain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.04);
-          thudOsc.connect(thudGain);
-          thudGain.connect(ctx.destination);
-          thudOsc.start(ctx.currentTime);
-          thudOsc.stop(ctx.currentTime + 0.04);
-
-        } catch (err) {
-          console.log('Audio feedback skipped');
-        }
+        triggerClickSound();
       }
     };
 
-    document.addEventListener('click', playClickSound);
-    return () => document.removeEventListener('click', playClickSound);
-  }, [soundOn]);
+    // Use capture: true to intercept clicks before any component calls e.stopPropagation()
+    document.addEventListener('click', handleGlobalClick, { capture: true });
+    return () => document.removeEventListener('click', handleGlobalClick, { capture: true });
+  }, []);
 
   return (
     <motion.header 
@@ -147,6 +163,20 @@ const Header = ({ activePage = 'about', setActivePage, openContact }) => {
           >
             Contact
           </button>
+          <a
+            className="nav-button resume-button"
+            href={siteConfig.resumeUrl || '#'}
+            target="_blank"
+            rel="noreferrer"
+            onClick={(e) => {
+              if (!siteConfig.resumeUrl) {
+                e.preventDefault();
+                alert('Resume has not been uploaded to Sanity yet!');
+              }
+            }}
+          >
+            Resume
+          </a>
         </nav>
 
         {/* RIGHT — Timer + Icons */}

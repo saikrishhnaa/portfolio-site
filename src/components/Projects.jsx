@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Code, ExternalLink } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
@@ -25,9 +25,21 @@ const cardVariants = {
 };
 
 const ProjectCard = ({ project }) => {
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const wrapperRef = useRef(null);
   const summary = project.summary || '';
-  const mightTruncate = summary.length > 80;
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (wrapperRef.current && !isExpanded) {
+        setIsOverflowing(wrapperRef.current.scrollHeight > wrapperRef.current.clientHeight + 2);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [summary, isExpanded]);
 
   return (
     <motion.div variants={cardVariants} className="project-feature-card">
@@ -39,14 +51,15 @@ const ProjectCard = ({ project }) => {
           <h3 className="project-title-text">{project.title}</h3>
         </div>
         
-        <div 
-          className="project-summary-wrapper"
-          onMouseEnter={() => mightTruncate && setTooltipVisible(true)}
-          onMouseLeave={() => setTooltipVisible(false)}
-        >
-          <p className="project-summary">{summary}</p>
-          {tooltipVisible && (
-             <div className="project-tooltip">{summary}</div>
+        <div className={`project-summary-wrapper ${isExpanded ? 'expanded' : ''}`} ref={wrapperRef}>
+          <p className="project-summary">
+            {summary}
+            {isOverflowing && isExpanded && (
+              <button className="read-more-btn inline-btn" onClick={() => setIsExpanded(false)}> less</button>
+            )}
+          </p>
+          {isOverflowing && !isExpanded && (
+            <button className="read-more-btn overlay-btn" onClick={() => setIsExpanded(true)}>...more</button>
           )}
         </div>
 

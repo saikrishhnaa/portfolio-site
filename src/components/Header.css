@@ -79,6 +79,14 @@
   border: 1px solid var(--border-color);
 }
 
+.resume-button {
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+
 .sound-toggle {
   background-color: var(--tag-purple);
   color: var(--text);

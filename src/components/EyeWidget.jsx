@@ -5,113 +5,104 @@ const EyeWidget = () => {
   const [message, setMessage] = useState(null);
   const [showBookmark, setShowBookmark] = useState(false);
   const [irisPos, setIrisPos] = useState({ x: 0, y: 0 });
+  const [isIrritated, setIsIrritated] = useState(false);
+  // Read actual bookmark state from localStorage on mount
+  const [hasBookmarked, setHasBookmarked] = useState(
+    () => localStorage.getItem('hasBookmarked') === 'true'
+  );
+
+  // Store latest state in refs to avoid stale closures inside intervals/listeners
+  const messageRef = React.useRef(message);
+  const showBookmarkRef = React.useRef(showBookmark);
+  const hasBookmarkedRef = React.useRef(hasBookmarked);
+  useEffect(() => { messageRef.current = message; }, [message]);
+  useEffect(() => { showBookmarkRef.current = showBookmark; }, [showBookmark]);
+  useEffect(() => { hasBookmarkedRef.current = hasBookmarked; }, [hasBookmarked]);
 
   // Custom Iris Tracking
   useEffect(() => {
     const handleMouseMove = (e) => {
-      // Estimated anchor of the eye on screen (bottom left)
-      const eyeX = 60; 
+      const eyeX = 60;
       const eyeY = window.innerHeight - 60;
       const dx = e.clientX - eyeX;
       const dy = e.clientY - eyeY;
-      
       const angle = Math.atan2(dy, dx);
-      // Max pixel radius the iris can move within the eye
       const dist = Math.min(12, Math.sqrt(dx * dx + dy * dy) / 15);
-      
-      setIrisPos({
-        x: Math.cos(angle) * dist,
-        y: Math.sin(angle) * dist
-      });
+      setIrisPos({ x: Math.cos(angle) * dist, y: Math.sin(angle) * dist });
     };
-    
     window.addEventListener('mousemove', handleMouseMove);
     return () => window.removeEventListener('mousemove', handleMouseMove);
   }, []);
 
-  // Global listener for Ctrl+D / Cmd+D to verify they actually pressed the bookmark keys!
+  // Global listener for Ctrl+D / Cmd+D
   useEffect(() => {
     const handleKeyDown = (e) => {
-      // Check for Ctrl/Cmd + D (event.key == 'd' ensures cross browser reliability)
-      if ((e.ctrlKey || e.metaKey) && String.fromCharCode(e.which).toLowerCase() === 'd') {
+      // e.key is the correct modern API; 'd' covers both lowercase
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'd') {
+        e.preventDefault(); // prevent default browser bookmark dialog
         localStorage.setItem('hasBookmarked', 'true');
-        setMessage("You bookmarked me! You're awesome.");
+        setHasBookmarked(true);
         setShowBookmark(false);
+        setMessage("You bookmarked me! You're awesome.");
         setTimeout(() => setMessage(null), 5000);
       }
     };
-    
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
   }, []);
 
-  // Scrolling behavior tracking
+  // Scroll tracking
   useEffect(() => {
     let totalScroll = 0;
     let lastScrollY = window.scrollY;
-
     const handleScroll = () => {
-      let diff = Math.abs(window.scrollY - lastScrollY);
+      const diff = Math.abs(window.scrollY - lastScrollY);
       totalScroll += diff;
       lastScrollY = window.scrollY;
-
-      if (totalScroll > 6000 && !message) {
+      if (totalScroll > 6000 && !messageRef.current) {
         setMessage("Whoa, you scroll a LOT. Searching for something?");
-        totalScroll = 0; // reset
-        setTimeout(() => {
-          if (!showBookmark) setMessage(null);
-        }, 5000);
+        totalScroll = 0;
+        setTimeout(() => { if (!showBookmarkRef.current) setMessage(null); }, 5000);
       }
     };
-
     window.addEventListener('scroll', handleScroll);
     return () => window.removeEventListener('scroll', handleScroll);
-  }, [message, showBookmark]);
+  }, []); // stable — uses refs, no deps needed
 
   // Random spontaneous thoughts & bookmark prompt
   useEffect(() => {
     const interval = setInterval(() => {
-      if (!message) {
-        const rand = Math.random();
-        
-        if (rand > 0.7) {
-          const hasBookmarked = localStorage.getItem('hasBookmarked') === 'true';
-          if (!hasBookmarked) {
-            setMessage("Bookmark me!");
-            setShowBookmark(true);
-          }
-        } else if (rand > 0.4) {
-          setMessage("I see you gazing at this design. Don't stare too long.");
-          setTimeout(() => {
-            if (!showBookmark) setMessage(null);
-          }, 4000);
-        }
+      if (messageRef.current) return; // already showing something
+      const rand = Math.random();
+      if (rand > 0.7 && !hasBookmarkedRef.current) {
+        // Only prompt bookmark if they haven't already bookmarked
+        setMessage("Bookmark me!");
+        setShowBookmark(true);
+      } else if (rand > 0.4) {
+        setMessage("I see you gazing at this design. Don't stare too long.");
+        setTimeout(() => { if (!showBookmarkRef.current) setMessage(null); }, 4000);
       }
-    }, 25000); // Evaluate every 25s
-    
+    }, 25000);
     return () => clearInterval(interval);
-  }, [message, showBookmark]);
+  }, []); // stable — uses refs only
 
   const handleBookmarkYes = () => {
-    // DO NOT set localStorage yet! We wait for them to actually press Ctrl+D.
-    setMessage("Press Ctrl+D (or Cmd+D) right now! I'm watching you.");
+    // Instruct user to press Ctrl+D — don't mark as bookmarked yet
     setShowBookmark(false);
+    setMessage("Press Ctrl+D (or Cmd+D) right now! I'm watching.");
     setTimeout(() => setMessage(null), 5000);
   };
 
   const handleBookmarkNo = () => {
-    localStorage.setItem('hasBookmarked', 'true');
-    setMessage("Wow. Fine. Break my heart.");
+    // User declined — dismiss the prompt this time, but don't permanently suppress
     setShowBookmark(false);
+    setMessage("Fine. Come back if you change your mind.");
     setTimeout(() => setMessage(null), 3000);
   };
-
-  const [isIrritated, setIsIrritated] = useState(false);
 
   const pokeEye = () => {
     setIsIrritated(true);
     setShowBookmark(false);
-    
     const pokeMsgs = [
       "Stop poking me!",
       "You've been scrolling a ton. Take a break and drink some water.",
@@ -119,13 +110,8 @@ const EyeWidget = () => {
       "Ouch! I'm just an innocent blob of CSS.",
       "Do your fingers hurt from scrolling so much? Go drink water."
     ];
-    
     setMessage(pokeMsgs[Math.floor(Math.random() * pokeMsgs.length)]);
-    
-    setTimeout(() => {
-      setIsIrritated(false);
-      setMessage(null);
-    }, 4000);
+    setTimeout(() => { setIsIrritated(false); setMessage(null); }, 4000);
   };
 
   return (

@@ -1,6 +1,6 @@
-import React, { useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { Award, ArrowUpRight } from 'lucide-react';
+import { Award, ExternalLink } from 'lucide-react';
 import './Achievements.css';
 import { client } from '../sanityClient';
 
@@ -46,6 +46,64 @@ const cardVariants = {
   show: { opacity: 1, y: 0, transition: { type: 'spring', stiffness: 80 } }
 };
 
+const AchievementCard = ({ item }) => {
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const wrapperRef = useRef(null);
+  const desc = item.description || '';
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (wrapperRef.current && !isExpanded) {
+        setIsOverflowing(wrapperRef.current.scrollHeight > wrapperRef.current.clientHeight + 2);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [desc, isExpanded]);
+
+  return (
+    <motion.div
+      className="achievement-card"
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-30px" }}
+      transition={{ type: 'spring', stiffness: 80 }}
+    >
+      <div className="achievement-content">
+        <div className="achievement-title-row">
+          <Award size={18} strokeWidth={2.5} />
+          {item.title}
+        </div>
+        <div className={`achievement-desc-wrapper ${isExpanded ? 'expanded' : ''}`} ref={wrapperRef}>
+          <p className="achievement-desc">
+            {desc}
+            {isOverflowing && isExpanded && (
+              <button className="read-more-btn inline-btn" onClick={() => setIsExpanded(false)}> less</button>
+            )}
+          </p>
+          {isOverflowing && !isExpanded && (
+            <button className="read-more-btn overlay-btn" onClick={() => setIsExpanded(true)}>...more</button>
+          )}
+        </div>
+      </div>
+
+      {item.link && (
+        <a
+          href={item.link}
+          target="_blank"
+          rel="noreferrer"
+          className="project-icon-btn primary"
+          title="Open Link"
+        >
+          <ExternalLink size={16} />
+        </a>
+      )}
+    </motion.div>
+  );
+};
+
 const Achievements = () => {
   const [achievements, setAchievements] = useState(achievementsData);
 
@@ -60,13 +118,7 @@ const Achievements = () => {
 
   return (
     <section className="achievements-section">
-      <motion.div 
-        className="achievements-container"
-        variants={containerVariants}
-        initial="hidden"
-        whileInView="show"
-        viewport={{ once: true, margin: "-50px" }}
-      >
+      <div className="achievements-container">
         <div className="achievements-header">
           <div className="achievements-subtitle">
             <Award size={16} strokeWidth={2.5} />
@@ -76,35 +128,10 @@ const Achievements = () => {
 
         <div className="achievements-list">
           {achievements.map((item, idx) => (
-            <motion.div 
-              key={item._id || idx} 
-              variants={cardVariants} 
-              className="achievement-card"
-            >
-              <div className="achievement-content">
-                <div className="achievement-title-row">
-                  <Award size={18} strokeWidth={2.5} />
-                  {item.title}
-                </div>
-                <div className="achievement-desc">
-                  {item.description}
-                </div>
-              </div>
-              
-              {item.link && (
-                <a 
-                  href={item.link} 
-                  target="_blank" 
-                  rel="noreferrer" 
-                  className="achievement-link"
-                >
-                  LINK <ArrowUpRight size={14} strokeWidth={3} />
-                </a>
-              )}
-            </motion.div>
+            <AchievementCard key={item._id || idx} item={item} />
           ))}
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

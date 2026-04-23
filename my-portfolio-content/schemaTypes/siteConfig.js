@@ -13,5 +13,13 @@ export default {
       title: 'LinkedIn Profile URL',
       type: 'url',
     },
+    {
+      name: 'resume',
+      title: 'Resume PDF',
+      type: 'file',
+      options: {
+        accept: 'application/pdf'
+      }
+    },
   ],
 }

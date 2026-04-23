@@ -86,11 +86,11 @@
 
 .tech-tooltip {
   position: absolute;
-  bottom: 160%;
+  top: calc(100% + 10px);
   left: 50%;
-  transform: translateX(-50%) translateY(10px);
-  background-color: var(--text);
-  color: #fff;
+  transform: translateX(-50%) translateY(-10px);
+  background-color: var(--card-bg);
+  color: var(--text);
   padding: 0.4rem 0.75rem;
   border-radius: 8px;
   font-size: 0.75rem;
@@ -100,18 +100,33 @@
   pointer-events: none;
   transition: opacity 0.2s ease, transform 0.2s ease;
   z-index: 100;
+  border: 1px solid var(--border-color);
+  box-shadow: 4px 4px 0 rgba(0, 0, 0, 0.05);
 }
 
-/* Small triangle pointing down */
+/* Small triangle pointing up */
 .tech-tooltip::after {
   content: "";
   position: absolute;
-  top: 100%;
+  bottom: 100%;
   left: 50%;
   margin-left: -4px;
   border-width: 4px;
   border-style: solid;
-  border-color: var(--text) transparent transparent transparent;
+  border-color: transparent transparent var(--border-color) transparent;
+}
+
+.tech-tooltip::before {
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -3px;
+  margin-bottom: -1px;
+  border-width: 3px;
+  border-style: solid;
+  border-color: transparent transparent var(--card-bg) transparent;
+  z-index: 1;
 }
 
 .tech-icon-container:hover .tech-tooltip {

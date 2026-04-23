@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useRef, useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { Code, Monitor } from 'lucide-react';
 import { FaGithub } from 'react-icons/fa';
@@ -17,13 +17,26 @@ const cardVariants = {
 };
 
 const RenderCard = ({ item }) => {
-  const [tooltipVisible, setTooltipVisible] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isOverflowing, setIsOverflowing] = useState(false);
+  const wrapperRef = useRef(null);
+  const description = item.description || '';
+
+  useEffect(() => {
+    const checkOverflow = () => {
+      if (wrapperRef.current && !isExpanded) {
+        setIsOverflowing(wrapperRef.current.scrollHeight > wrapperRef.current.clientHeight + 2);
+      }
+    };
+    checkOverflow();
+    window.addEventListener('resize', checkOverflow);
+    return () => window.removeEventListener('resize', checkOverflow);
+  }, [description, isExpanded]);
+
   // Support both Sanity field name (youtubeId) and fallback field name (videoId)
   const videoId = item.youtubeId || item.videoId || '';
   const githubUrl = item.githubRepo || item.githubUrl || '#';
-  const description = item.description || '';
   const embedUrl = `https://www.youtube.com/embed/${videoId}`;
-  const mightTruncate = description.length > 80;
 
   return (
     <motion.div variants={cardVariants} className="render-card">
@@ -46,14 +59,15 @@ const RenderCard = ({ item }) => {
       <div className="render-info">
         <h3 className="render-title">{item.title}</h3>
 
-        <div
-          className="render-desc-wrapper"
-          onMouseEnter={() => mightTruncate && setTooltipVisible(true)}
-          onMouseLeave={() => setTooltipVisible(false)}
-        >
-          <p className="render-desc">{description}</p>
-          {tooltipVisible && (
-            <div className="render-tooltip">{description}</div>
+        <div className={`render-desc-wrapper ${isExpanded ? 'expanded' : ''}`} ref={wrapperRef}>
+          <p className="render-desc">
+            {description}
+            {isOverflowing && isExpanded && (
+              <button className="read-more-btn inline-btn" onClick={() => setIsExpanded(false)}> less</button>
+            )}
+          </p>
+          {isOverflowing && !isExpanded && (
+            <button className="read-more-btn overlay-btn" onClick={() => setIsExpanded(true)}>...more</button>
           )}
         </div>
 
@@ -145,12 +159,16 @@ const RendersPage = () => {
   React.useEffect(() => {
     const fetchRenders = async () => {
       try {
-        const query = '*[_type == "render"]';
+        setLoading(true);
+        // Fetch from Sanity ordered by the 'order' field
+        const query = '*[_type == "render"] | order(order asc)';
         const data = await client.fetch(query);
-        // Temporarily commented out to always show all hardcoded videos
-        // if (data && data.length > 0) setRendersList(data);
+        // Use Sanity data if available, otherwise keep hardcoded fallback
+        if (data && data.length > 0) setRendersList(data);
       } catch (error) {
         console.warn('Renders fetch failed, using fallback data');
+      } finally {
+        setLoading(false);
       }
     };
     fetchRenders();

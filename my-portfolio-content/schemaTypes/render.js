@@ -29,5 +29,18 @@ export default {
       title: 'GitHub Repo URL',
       type: 'url',
     },
+    {
+      name: 'order',
+      title: 'Display Order',
+      type: 'number',
+      description: 'Controls the order cards appear (lower = first). e.g. 1, 2, 3...',
+    },
   ],
+  orderings: [
+    {
+      title: 'Custom Order',
+      name: 'customOrder',
+      by: [{ field: 'order', direction: 'asc' }]
+    }
+  ]
 }
