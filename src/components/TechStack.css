@@ -72,9 +72,68 @@
 }
 
 @media (max-width: 768px) {
+  .techstack-section {
+    padding: 0 1rem 1.5rem 1rem;
+  }
+
   .techstack-container {
-    padding: 2rem 2rem;
-    gap: 2rem;
+    padding: 1.5rem 1.25rem;
+    gap: 1.5rem;
+    border-radius: 24px;
+  }
+
+  .tech-group-icons {
+    gap: 1rem;
+  }
+
+  .tech-icon-img {
+    width: 2.25rem;
+    height: 2.25rem;
+  }
+
+  .tech-icon-placeholder {
+    width: 2.25rem;
+    height: 2.25rem;
+    font-size: 1rem;
+  }
+
+  .tech-group {
+    padding: 0 0.5rem;
+  }
+
+  .tech-group-divider {
+    height: 1.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .techstack-section {
+    padding: 0 0.75rem 1rem 0.75rem;
+  }
+
+  .techstack-container {
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .tech-icon-img {
+    width: 2rem;
+    height: 2rem;
+  }
+
+  .tech-icon-placeholder {
+    width: 2rem;
+    height: 2rem;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+
+  .tech-group-icons {
+    gap: 0.75rem;
+  }
+
+  .techstack-title {
+    font-size: 0.8rem;
   }
 }
 

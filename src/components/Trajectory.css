@@ -121,19 +121,71 @@
 }
 
 @media (max-width: 768px) {
+  .trajectory-section {
+    padding: 0 1rem 1.5rem 1rem;
+  }
+
   .trajectory-container {
-    padding: 2rem 1.5rem;
+    padding: 1.5rem 1.25rem;
+    border-radius: 24px;
   }
   
   .trajectory-item {
     flex-direction: column;
     gap: 1rem;
-    padding: 1.5rem;
+    padding: 1.25rem;
   }
   
   .item-logo {
     width: 60px;
     height: 60px;
     font-size: 1.25rem;
+  }
+
+  .trajectory-title {
+    font-size: 1.25rem;
+  }
+
+  .item-role {
+    font-size: 1rem;
+  }
+
+  .item-bullets li {
+    font-size: 0.9rem;
+  }
+
+  .trajectory-list {
+    gap: 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .trajectory-section {
+    padding: 0 0.75rem 1rem 0.75rem;
+  }
+
+  .trajectory-container {
+    padding: 1.25rem 1rem;
+    border-radius: 20px;
+  }
+
+  .trajectory-item {
+    padding: 1rem;
+  }
+
+  .item-logo {
+    width: 50px;
+    height: 50px;
+    font-size: 1.1rem;
+    border-radius: 12px;
+  }
+
+  .item-role {
+    font-size: 0.95rem;
+    margin-bottom: 0.75rem;
+  }
+
+  .item-bullets li {
+    font-size: 0.85rem;
   }
 }

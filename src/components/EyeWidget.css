@@ -158,3 +158,82 @@
   background-color: var(--text);
   border-radius: 50%;
 }
+
+@media (max-width: 768px) {
+  .eye-widget-container {
+    bottom: 1rem;
+    left: 1rem;
+  }
+
+  .css-eye {
+    width: 60px;
+    height: 60px;
+    border-width: 4px;
+    box-shadow: 4px 4px 0px var(--text);
+  }
+
+  .css-iris {
+    width: 30px;
+    height: 30px;
+    border-width: 3px;
+  }
+
+  .css-pupil {
+    width: 10px;
+    height: 10px;
+  }
+
+  .css-eye-lid {
+    border-bottom-width: 3px;
+  }
+
+  .eye-bubble-container {
+    max-width: 200px;
+    padding: 0.6rem 0.8rem;
+    margin-bottom: 15px;
+  }
+
+  .eye-bubble-text {
+    font-size: 0.8rem;
+    margin-bottom: 0.6rem;
+  }
+
+  .eye-btn {
+    font-size: 0.7rem;
+    padding: 0.3rem 0.6rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .eye-widget-container {
+    bottom: 0.75rem;
+    left: 0.75rem;
+  }
+
+  .css-eye {
+    width: 50px;
+    height: 50px;
+    border-width: 3px;
+    box-shadow: 3px 3px 0px var(--text);
+  }
+
+  .css-iris {
+    width: 24px;
+    height: 24px;
+    border-width: 3px;
+  }
+
+  .css-pupil {
+    width: 8px;
+    height: 8px;
+  }
+
+  .eye-bubble-container {
+    max-width: 170px;
+    padding: 0.5rem 0.7rem;
+  }
+
+  .eye-bubble-text {
+    font-size: 0.75rem;
+  }
+}
